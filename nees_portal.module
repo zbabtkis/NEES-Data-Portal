@@ -1,0 +1,78 @@
+<?php
+
+function nees_portal_menu() {
+	$items = array();
+	$items['nees-portal'] = array(
+		'title' => t('Nees Portal'),
+		'description' => t('Nees data portal'),
+		'page callback' => 'nees_portal_page',
+		'access arguments' => array('access content'),
+		'type' => MENU_NORMAL_ITEM);
+	return $items;
+}
+
+function nees_portal_page() {
+	$module_path = drupal_get_path('module','nees_portal');
+
+
+	/** Drupal settings */
+
+	drupal_add_js(array('drupal_path'=>$module_path),'setting');
+
+	/**  JS Libraries */
+	drupal_add_js("https://maps.googleapis.com/maps/api/js?sensor=false");
+	drupal_add_js("https://ajax.googleapis.com/ajax/libs/mootools/1.4.5/mootools-yui-compressed.js",array('scope' => 'footer'));
+	drupal_add_js($module_path . "/js/lib/mootools-more-1.4.0.1.js",array('scope' => 'footer'));
+	drupal_add_js($module_path . "/js/lib/underscore.js",array('scope' => 'footer'));
+	drupal_add_js($module_path . "/js/lib/pubsub.js",array('scope' => 'footer'));
+	drupal_add_js($module_path . "/js/lib/PopUpWindow.js",array('scope' => 'footer'));
+	drupal_add_js($module_path . "/js/lib/domStorageShim.js",array('scope' => 'footer'));
+
+
+	drupal_add_js($module_path . "/js/lib/DoubleSlider.js",array('scope' => 'footer'));
+	drupal_add_js($module_path . "/js/lib/Scrollable.js",array('scope' => 'footer'));
+
+	drupal_add_js($module_path . "/js/lib/tab.js",array('scope' => 'footer'));
+	drupal_add_js($module_path . "/js/lib/toggle.js",array('scope' => 'footer'));
+
+	/** DatePicker JS */
+	drupal_add_js($module_path . "/js/lib/DatePicker/Locale.en-US.DatePicker.js",array('scope' => 'footer'));
+	drupal_add_js($module_path . "/js/lib/DatePicker/Picker.js",array('scope' => 'footer'));
+	drupal_add_js($module_path . "/js/lib/DatePicker/Picker.Attach.js",array('scope' => 'footer'));
+	drupal_add_js($module_path . "/js/lib/DatePicker/Picker.Date.js",array('scope' => 'footer'));
+
+	/** App JS */
+
+	drupal_add_js($module_path . "/js/app.js",array('scope' => 'footer'));
+	drupal_add_js($module_path . "/js/app.settings.js",array('scope' => 'footer'));
+
+	/** MVC JS */
+
+	drupal_add_js($module_path . "/js/Model.js",array('scope' => 'footer'));
+	drupal_add_js($module_path . "/js/View.js",array('scope' => 'footer'));
+	drupal_add_js($module_path . "/js/Controller.js",array('scope' => 'footer'));
+
+	/** STYLESHEETS */
+
+	drupal_add_css('//fonts.googleapis.com/css?family=Ubuntu');
+	drupal_add_css($module_path . "/css/main.css");
+	drupal_add_css($module_path . "/css/datepicker_jqui.css");
+	drupal_add_css($module_path . "/css/DoubleSlider.css");
+	drupal_add_css($module_path . "/css/Scrollable.css");
+	drupal_add_css('.region-sidebar-first{ display: none; } #content-column { margin: 0; width: 100% !important;} .content-inner, .sidebar-first { margin-left: 0px !important;} #page-title { display: none; }', 'inline');
+
+	$themed = theme('nees_portal_template', array('module_path' => $module_path));
+	return($themed);
+}
+
+
+
+function nees_portal_theme() {
+   $themes = array(
+      'nees_portal_template' => array(
+          'template' => 'portal',
+          'variables' => array('module_path' => null)
+      ),
+   );
+   return($themes);
+}

@@ -1,0 +1,4 @@
+data/*
+converter/*.pyc
+converter/*.py
+*.php

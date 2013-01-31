@@ -2,7 +2,7 @@
 
 function nees_portal_menu() {
 	$items = array();
-	$items['nees-portal'] = array(
+	$items['data-portal'] = array(
 		'title' => t('Nees Portal'),
 		'description' => t('Nees data portal'),
 		'page callback' => 'nees_portal_page',

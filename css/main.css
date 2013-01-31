@@ -1,22 +1,11 @@
 /*	NEES Data Portal Stylesheet	*/
 
-#pseudohtml, #pseudobody {
-	margin: 0;
-	padding: 0;
-	width: 100%;
-}
-
-#pseudobody {
-	color: #EEE;
-	font-family: 'Ubuntu', sans-serif;
-	font-size: 12px;
-	overflow: auto;
-}
 #app-wrap {
      color: #EEE;
 	 font-family: 'Ubuntu', sans-serif; 
 	 font-size: 12px;
 	 overflow: auto;
+	 height: 750px;
 	 border: 1px solid #054B81;
 }
 #app-wrap th {
@@ -86,7 +75,7 @@ tr.selected, tr.selected td, #app-evt-table tbody tr.selected:hover {
 #app-grid {
 	background-color: #101214;
 	float: left;
-	height: 500px;
+	height: 670px;
 	position: relative;
 	width: 37%;
 	z-index: 2;
@@ -145,7 +134,7 @@ tr.selected, tr.selected td, #app-evt-table tbody tr.selected:hover {
 #app-viewport {
 	background-color: #101214;
 	float: right;
-	height: 500px;
+	height: 670px;
 	overflow: hidden;
 	width: 63%;
 }
@@ -156,7 +145,7 @@ tr.selected, tr.selected td, #app-evt-table tbody tr.selected:hover {
 .tabTitle {
 	border-bottom: 5px solid #555;
 	color: #FFF;
-	cursor: default;
+	cursor: pointer;
 	float: left;
 	font-size: 16px;
 	height: 40px;

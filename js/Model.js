@@ -71,7 +71,7 @@ var app     =   window.app || (window.app = {}),
 			new Request.JSON({
 				method: app.DEBUG ? 'GET' : 'POST',
 				onSuccess: this._processData,
-				url: Drupal.settings.drupal_path + '/' + this.options.url + (app.DEBUG ? '.json' : '.php')
+				url: (app.Drupal ? Drupal.settings.drupal_path + '/' : '') + this.options.url + (app.DEBUG ? '.json' : '.php')
 			}).send(queryString);
 		},
 		getMeta: function () {
@@ -134,38 +134,60 @@ var app     =   window.app || (window.app = {}),
 				delete this._data[evt];
 			}
 		},
-        empty: function () {
-            for (key in this._data) {
-                delete this._data[key];
-              }
-        },
+		empty: function () {
+			this._data = {};
+		},
 		toObj: function () {
 			return this._data;
 		}
 	};
 	app.Models.Cart = cart;
-
-	// Local events from cookies
+	
+	// Store events client side
 	PubSub.subscribe('cartUpdated', function (data) {
+		var numChns = 0;
 		window.localStorage.setItem('cartItems', JSON.encode(data));
+		
+		for (var i = 0, j = Object.values(cart._data); i < j.length; i++) {
+			numChns += j[i].chnList.length;
+		}
+		
+		if (Object.getLength(cart._data) === 0) {
+			$('cart-count').innerHTML = 'Cart empty';
+		} else {
+			$('cart-count').set('html', app.settings.CART_COUNT_STRING
+				.replace('{chnCount}', numChns)
+				.replace('{evtCount}', Object.getLength(cart._data))
+			);
+		}
+		
+		$('empty-cart').setStyle('visibility', numChns ? 'visible': 'hidden');
 	});
-
+	
 	window.addEvent('load', function () {
 		if (window.localStorage.getItem('cartItems')) {
+			var numChns = 0;
 			cart._data = JSON.decode(window.localStorage.getItem('cartItems'));
 			PubSub.publish('cartUpdated', cart._data);
-
-                        for(var i=0, chnCnt = 0, siteEvt = Object.keys(cart._data); i < siteEvt.length; i++) {
-                          chnCnt += cart._data[siteEvt[i]]['chnList'].length;
-                        }
-                        if ((i + chnCnt) == 0) {
-                           $('in-cart').innerHTML = "(Cart empty)";
-                        }
-                        else {
-                           $('in-cart').innerHTML = "(" + chnCnt + " Chans from " + i + " Events)";
-                        }
-
-		}
+			
+			for (var i = 0, j = Object.values(cart._data); i < j.length; i++) {
+				numChns += j[i].chnList.length;
+			}
+			
+			if (Object.getLength(cart._data) === 0) {
+				$('cart-count').innerHTML = 'Cart empty';
+			} else {
+				$('cart-count').set('html', app.settings.CART_COUNT_STRING
+					.replace('{chnCount}', numChns)
+					.replace('{evtCount}', Object.getLength(cart._data))
+				);
+				$('cart-msg').setStyle('visibility', 'visible');
+				$('cart-msg').set('text', 'Loaded '
+					+ Object.getLength(cart._data) + ' items from previous session');
+				
+				$('cart-msg').fade.delay(5000, $('cart-msg'), 'out');
+			}
+		} else console.log('localStorage not supported');
 	});
 	
 }) ();

@@ -55,7 +55,7 @@ var PopUpWindow = new Class({
 		windowDiv.setStyle('left', this.options.left);
 		windowDiv.setStyle('top',  this.options.top );
 		
-		var closeIconHTML  = this.options.isClosable  ? '<span class="closeIcon"></span>'  : '';
+		var closeIconHTML  = this.options.isClosable  ? '<span class="closeIcon">&#215;</span>'  : '';
 		var resizeIconHTML = this.options.isResizable ? '<span class="resizeIcon"></span>' : '';
 		
 		windowDiv.set('html',

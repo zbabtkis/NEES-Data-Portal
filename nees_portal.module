@@ -27,13 +27,9 @@ function nees_portal_page() {
 	drupal_add_js($module_path . "/js/lib/pubsub.js",array('scope' => 'footer'));
 	drupal_add_js($module_path . "/js/lib/PopUpWindow.js",array('scope' => 'footer'));
 	drupal_add_js($module_path . "/js/lib/domStorageShim.js",array('scope' => 'footer'));
-
-
 	drupal_add_js($module_path . "/js/lib/DoubleSlider.js",array('scope' => 'footer'));
 	drupal_add_js($module_path . "/js/lib/Scrollable.js",array('scope' => 'footer'));
-
 	drupal_add_js($module_path . "/js/lib/tab.js",array('scope' => 'footer'));
-	drupal_add_js($module_path . "/js/lib/toggle.js",array('scope' => 'footer'));
 
 	/** DatePicker JS */
 	drupal_add_js($module_path . "/js/lib/DatePicker/Locale.en-US.DatePicker.js",array('scope' => 'footer'));

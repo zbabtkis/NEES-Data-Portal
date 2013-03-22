@@ -1,164 +1,166 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 	<head>
 		<title>NEES@UCSB Data Portal</title>
 
-		<meta http-equiv="content-type" content="text/html; charset=utf-8">
+		<meta charset="utf-8">
 
 		<!-- CSS -->
 		<link href='//fonts.googleapis.com/css?family=Ubuntu' rel='stylesheet' type='text/css'>
 		<link rel="stylesheet" type="text/css" href="css/main.css">
 		<link rel="stylesheet" type="text/css" href="css/datepicker_jqui.css">
-		<link rel="stylesheet" type="text/css" href="css/DoubleSlider.css">
-		<link rel="stylesheet" type="text/css" href="css/Scrollable.css">
-
 	</head>
 	<body>
-<div id="pretend"> </div>
-<div style='position: absolute;'><a href='http://www.nees.ucsb.edu'><div id="pretend-link"></div>  </a> </div>
-<div id="app-wrap">
+		<div id="app-wrap">
+			<div id="app-title" class="clearfix">
+				<h1>NEES@UCSB Data Portal</h1>
+				
+				<div id="cart-button">
+					<div id="view-cart">Cart</div>
+					<span id="cart-count">Cart is empty</span>
+					<div id="empty-cart">Empty Cart</div>
+				</div>
+				<a id="feedback" href="mailto:nees_contact@eri.ucsb.edu">Feedback, Questions?</a>
+				<div id="thumb-box"></div>
+				<div id="empty-box">
+					Confirm cart empty?
+					<br />
+					<span id="yes-empty">YES</span>
+					<span id="no-empty">NO</span>
+				</div>
+			</div>
+			<div id="app-viewport">
+			</div>
+			<div id="app-grid" class="clearfix">
+				<div class="toggle">
+					<input id="toggle-input-check" class="toggle-check" type="checkbox" checked>
+					<label for="toggle-input-check" class="toggle-title active"><img alt="Input" src="img/android/search.png" width="25" height="25" />Input</label>
+					<div id="app-input" class="toggle-target">
+						<div class="input-field">
+							<label for="site">Station:</label>
+							<div id="site-msg"></div>
+							<select class="app-input-flds" id="site">
+							</select>
+						</div>
+						<div class="input-field">
+							<label for="radius">Distance(km):</label>
+							<input class="app-input-flds" id="radius"  type="text" value="100" />
+						</div>
+	
+						<div class="input-field">
+							<label for="minMag">Magnitude:</label>
+							<input class="app-input-flds number-field" id="minMag" type="text" value="1.0" />
+							<span class="spacer">to</span>
+							<input class="app-input-flds number-field" id="maxMag" type="text" value="9.0" />
+						</div>
+	
+						<div id="pga-field" class="input-field">
+							<label for="minPGA">PGA (cm/s/s):</label>
+							<input class="app-input-flds number-field" id="minPGA" type="text" value="0" />
+							<span class="spacer">to</span>
+							<input class="app-input-flds number-field" id="maxPGA" type="text" value="9000" />
+						</div>
+	
+						<div class="input-field">
+							<label for="sDate">Date:</label>
+							<input class="app-input-flds app-input-flds-date double-field" id="sDate" type="text" />
+							<span class="spacer">to</span>
+							<input class="app-input-flds app-input-flds-date double-field" id="eDate" type="text" />
+						</div>
+						
+						<div class="toggle">
+							<input id="toggle-options-check" type="checkbox">
+							<label for="toggle-options-check">Show Options</label>
+							<div class="toggle-target" style="border-bottom: 1px;padding: 0;padding-left: 15px;margin-left: 10px;">
+								<div class="input-field">
+									<input id="enable-PGA" class="float-left" type="checkbox" />
+									<label for="enable-PGA">Enable PGA search</label>
+									<br />
+									<input id="depToEvid" class="float-left" type="checkbox" />
+									<label for="depToEvid">Replace depth with evid</label>
+									<br />
+									<input id="disablePrev" class="float-left" type="checkbox" checked />
+									<label for="disablePrev">Disable waveform preview</label>
+								</div>
+			
+								<div class="input-field" style="margin-top: 8px">
+									<input class="app-input-flds number-field float-left" id="itemsPerPage" type="text" style="width: 20px" value='25' />
+									<label id="itemsPerPageLbl" for="itemsPerPage">Events/Page</label>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="toggle">
+					<input id="toggle-evtgrid-check" class="toggle-check" type="checkbox" checked>
+					<label for="toggle-evtgrid-check" class="toggle-title active"><img alt="Events" src="img/android/globe.png" width="25" height="25" />Events</label>
+					<div class="toggle-target">
+						<div id="table-ctrls" class="clearfix">
+							<div class="table-ctrl btn left-motion" id="table-ctrl-prev" data-page-offset="-1">&larr;</div>
+							<div class="table-ctrl">Page <input id="table-ctrl-page" type="text" value="1"> out of <span id="table-ctrl-total">0</span> ( <span id="query-result"></span> )</div>
+							<div class="table-ctrl btn right-motion" id="table-ctrl-next" data-page-offset="1">&rarr;</div>
+						</div>
+						<div id="app-evt-table">
+						</div>
+					</div>
+				</div>
+			</div>
+			<div id="app-channel-box">
+				<div id="channel-title" class="title">
+					Channels
+					<div id="channel-view">View</div>
+					<div id="channel-close">&#215;</div>
+				</div>
+				<div id="channel-grid-head">
+				</div>
+				<div id="channel-grid-body">
+				</div>
+			</div>
+			<div id="app-cart">
+				<div id="cart-title" class="title">Cart</div>
+				
+				<div id="cart-progress">
+					<span style="position: absolute; left: 50%; height: 30px; line-height: 20px;">Processing...</span>
+					<div id="cart-progress-bar">
+					</div>
+				</div>
+				<div id="cart-download"></div>
+				<div id="cart-close">&#215;</div>
+	
+				<div id="cart-left">
+					<div>No channels selected!</div>
+				</div>
+				<div id="cart-right">
+					<div class="input-field">
+						<label for="cart-input-name">Name (optional)</label>
+						<input id="cart-input-name" type="text" />
+					</div>
+					<div class="input-field">
+						<label for="cart-input-email">E-mail (required)</label>
+						<input id="cart-input-email" type="text" />
+					</div>
+					<div class="input-field">
+						<div id="cart-input-format-wrap">
 
-		<div id="app-title" class="clearfix">
-			<h1>NEES@UCSB Data Portal</h1>
-   <div id="click-cart"><b><div id="view-cart">Open Cart</b></div><div id="in-cart">(Cart empty)</div><div id="empty-cart">Empty Cart</div></div>
-   <div id='prevw'></div>
-   <div id='empty'><br />Do you really want to empty your cart?<br /><span id="yes-empty">YES</span><span id="no-empty">NO</span></div>
+							<table id="cart-input-format">
+								<thead>
+									<tr>
+										<th></th>
+										<th>Format</th>
+										<th>Calibrate</th>
+										<th>Time</th>
+									</tr>
+								</thead>
+								<tbody></tbody>
+							</table>
+						</div>
+					</div>
+					<a id="formatDetails" href="#" style="float: right; margin-top: -10px; margin-bottom: 10px">Data Format Details</a>
+					<button id="cart-submit">Submit</button>
+				</div>
+			</div>
 		</div>
-		<div id="app-viewport">
-		</div>
-		<div id="app-grid" class="clearfix">
-			<div class="toggle">
-				<span class="toggle-title active"><img alt="Input" src="img/android/search.png" width="20" height="20" />Input</span>
-				<div id="app-input" class="toggle-target">
-					<div class="input-field">
-						<label for="site">Station:</label>
-						<select class="app-input-flds" id="site">
-						</select>
-					</div>
-					<div class="input-field">
-						<label for="radius">Distance(km):</label></td>
-						<input class="app-input-flds" id="radius"  type="text" value="10" />
-					</div>
-
-					<div class="input-field">
-						<label for="minMag">Magnitude:</label>
-						<input class="app-input-flds double-field" id="minMag" type="text" value="1.0" style="width: 40px;" />
-						<span class="spacer">to</span>
-						<input class="app-input-flds double-field" id="maxMag" type="text" value="9.0" style="width: 40px;"/>
-					</div>
-
-					<div class="input-field">
-						<label for="sDate">Date Range:</label>
-						<input class="app-input-flds double-field app-input-flds-date" id="sDate" type="text"  />
-						<span class="spacer">to</span>
-						<input class="app-input-flds double-field app-input-flds-date" id="eDate" type="text"  />
-					</div>
-					<div class="input-field">
-						<label for="itemsPerPage">Events/Page:</label>
-						<input class="app-input-flds" id="itemsPerPage" type="text" value='' autocomplete='off'/>
-					</div>
-
-					<div class="input-field">
-						<input id="depToEvid" type="checkbox" /><label for="depToEvid" style="display: inline;">Replace depth with evid#</label><br />
-						<input id="dsblPrevw" type="checkbox" checked="checked" onclick="thumbnailInit()" /><label for="dsblPrevw" style="display: inline;">Disable waveform preview</label>
-					</div>
-				</div>
-			</div>
-			<div class="toggle">
-				<span class="toggle-title active"><img alt="Events" src="img/android/globe.png" width="20" height="20" />Events</span>
-				<div class="toggle-target">
-					<div id="table-ctrls" class="clearfix">
-						<div class="table-ctrl btn left-motion" id="table-ctrl-prev" data-page-offset="-1"><img src="img/android/prev.png" alt="Previous" height="16" width="16"></div>
-						<div class="table-ctrl">Page <input id="table-ctrl-page" type="text" value="1"> out of <span id="table-ctrl-total">0</span> ( <span id="query-result"></span> )</div>
-						<div class="table-ctrl btn right-motion" id="table-ctrl-next" data-page-offset="1"><img src="img/android/next.png" alt="Next" height="16" width="16"></div>
-					</div>
-					<div id="app-evt-table">
-					</div>
-				</div>
-			</div>
-		</div>
-		<div id="app-channel-box">
-			<div id="channel-title" class="title">Channels<div id="channel-close">x</div></div>
-			<div id="channel-controls" class="clearfix">
-				<div id="chn-control-view" class="chn-control">Launch Viewer</div>
-				<div class="clearfix"></div>
-			</div>
-			<div id="channel-grid-head">
-			</div>
-			<div id="channel-grid-body">
-			</div>
-		</div>
-		<div id="app-cart">
-			<div id="cart-title" class="title">Cart</div>
-                        <div id="cart-ptitle">Progress:</div><div id="cart-progframe"></div><div id="cart-progress"></div><div id="cart-dwnld"></div>
-			<div id="cart-close">&#215;</div>
-
-			<div id="cart-left">
-				<div id="cart-ctrls">
-				</div>
-				<div id="cart-grid">
-				</div>
-			</div>
-			<div id="cart-right">
-				<div class="input-field">
-					<label for="cart-input-name">Name (optional)</label>
-					<input id="cart-input-name" type="text" />
-				</div>
-				<div class="input-field">
-					<label for="cart-input-email">E-mail (required)</label>
-					<input id="cart-input-email" type="text" />
-				</div>
-				<div class="input-field">
-<div id="cart-input-format-wrap">
-<table id="cart-input-format">
-    <thead><tr><th>Format</th><th>Calibrate</th><th>Time</th></tr></thead>
-<tbody>
-<tr id="gray">
-    <td><input class="format-toggle" type="checkbox" name="asc">ASCII</td>
-    <td>  <input type="radio" name="ascC" checked="checked" class="calib-calib">Calib   
-    <br /><input type="radio" name="ascC">Counts </td> 
-    <td>  <input type="radio" name="ascT" checked="checked" class="time-absolute">Absolute
-    <br /><input type="radio" name="ascT">Relative</td>
-</tr>
-<tr>
-    <td><input class="format-toggle" type="checkbox" name="rdv">RDV</td>
-    <td>  <input type="radio" name="rdvC" checked="checked" class="calib-calib">Calib   
-    <br /><input type="radio" name="rdvC">Counts </td> 
-    <td>  <input type="radio" name="rdvT" checked="checked" class="time-absolute">Absolute
-    <br /><input type="radio" name="rdvT">Relative</td>
-</tr>
-<tr id="gray">
-    <td><input class="format-toggle" type="checkbox" name="sac">SAC</td>
-    <td>  <input type="radio" name="sacC" checked="checked" class="calib-calib">Calib   
-    <br /><input type="radio" name="sacC">Counts </td> 
-    <td>  <input type="radio" name="sacT" checked="checked" class="time-absolute">Absolute
-    <br /><input type="radio" name="sacT" disabled><span>Relative</span></td>
-</tr>
-<tr>
-    <td><input class="format-toggle" type="checkbox" name="msd">Miniseed</td>
-    <td>  <input type="radio" name="msdC" class="calib-calib" disabled><span>Calib</span>   
-    <br /><input type="radio" name="msdC" checked="checked">Counts </td> 
-    <td>  <input type="radio" name="msdT" checked="checked" class="time-absolute">Absolute
-    <br /><input type="radio" name="msdT" disabled><span>Relative</span></td>
-</tr>
-<tr id="gray">
-    <td><input class="format-toggle" type="checkbox" name="cos" disabled><span>COSMOS</span></td>
-    <td>  <input type="radio" name="cosC" checked="checked" class="calib-calib" disabled><span>Calib</span>   
-    <br /><input type="radio" name="cosC" disabled><span>Counts</span> </td> 
-    <td>  <input type="radio" name="cosT" checked="checked" class="time-absolute" disabled><span>Absolute</span>
-    <br /><input type="radio" name="cosT" disabled><span>Relative</span></td>
-</tr>
-
-</tbody>    
-    
-</table>
-				</div>
-				<button id='subButton'>Submit</button>
-			</div>
-		</div></div>
-
-
-</div>
+		<div id="cart-msg"></div>
 
 		<!-- Libraries -->
 		<script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?sensor=false"></script>
@@ -166,16 +168,9 @@
 		<script type="text/javascript" src="js/lib/mootools-more-1.4.0.1.js"></script>
 		<script type="text/javascript" src="js/lib/underscore.js"></script>
 		<script type="text/javascript" src="js/lib/pubsub.js"></script>
-		<script type="text/javascript" src="js/lib/PopUpWindow.js"></script>
-
 		<script type="text/javascript" src="js/lib/domStorageShim.js"></script>
-
-		<script type="text/javascript" src="js/lib/DoubleSlider.js"></script>
-		<script type="text/javascript" src="js/lib/Scrollable.js"></script>
-
-
+		<script type="text/javascript" src="js/lib/PopUpWindow.js"></script>
 		<script type="text/javascript" src="js/lib/tab.js"></script>
-		<script type="text/javascript" src="js/lib/toggle.js"></script>
 		
 		<!-- DatePicker JS -->
 		<script type="text/javascript" src="js/lib/DatePicker/Locale.en-US.DatePicker.js"></script>

@@ -68,9 +68,11 @@ var _ = window._;
         },
         select: function (idx) {
             this._wrap.getElements('.tabTitle, .tabView').removeClass('active');
+            this._wrap.getElements('.tabView').hide();
+			
             this._wrap.getElements('.tabTitle')[idx].addClass('active');
             this._wrap.getElements('.tabView')[idx].addClass('active');
-            this._wrap.getElements('.tabView')[idx].fireEvent('tabFocus');
+            this._wrap.getElements('.tabView')[idx].show();
         }
     });
     

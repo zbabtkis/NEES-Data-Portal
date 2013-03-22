@@ -1,9 +1,9 @@
 /* vim: set tabstop=4 shiftwidth=4: */
 /*jslint mootools:true */
-var app			 =   window.app || (window.app = {}),
-	_			   =   window._,
-	Picker		  =   window.Picker,
-	PubSub		  =   window.PubSub;
+var	app		=	window.app || (window.app = {}),
+	_		=	window._,
+	Picker	=	window.Picker,
+	PubSub	=	window.PubSub;
 
 /**
  * Handles user input
@@ -36,17 +36,53 @@ var app			 =   window.app || (window.app = {}),
 		// Set DatePicker initial values
 		$('sDate').retrieve('_picker').select(app.settings.FIRST_EVENT);
 		$('eDate').retrieve('_picker').select(new Date());
-	    $('itemsPerPage').value=25;	
+		
 		this.getSites();
 		
 		inputFields.addEvent('change', this.getInput);
+		inputFields.addEvent('keypress', function (evt) {
+			if (evt.key === 'enter') {
+				this.getInput()
+			}
+		}.bind(this));
+		
+		$('pga-field')[$('enable-PGA').checked ? 'show' : 'hide']();
+		$('enable-PGA').addEvent('click', this.getInput);
+		$('enable-PGA').addEvent('click', function () {
+			$('pga-field')[$('enable-PGA').checked ? 'show' : 'hide']();
+		});
+		
+		$('site-msg').hide();
+		PubSub.subscribe('inputChanged', function (data) {
+			var siteName = $('site').options[$('site').selectedIndex]
+				.getAttribute('site').toLowerCase();
+				
+			$('site-msg').hide();
+				
+			new Request({
+				onSuccess: Controller.Input.siteMsg,
+				url: (app.Drupal ? Drupal.settings.drupal_path + '/' : '') + siteName + '.txt'
+			}).get();
+		});
 	});
+	
+	// Display msg regarding site
+	Controller.Input.siteMsg = (function (txt) {
+		$('site-msg').show();
+		$('site-msg').set('html', txt);
+	});
+	
 	// Prepare user input for data request
 	Controller.Input.getInput = (function () {
 		this._input = {};
 		
 		for (var idx = 0, l = inputFields.length; idx < l; idx++) {
 			this._input[inputFields[idx].get('id')] = inputFields[idx].value;
+		}
+		
+		if (!$('enable-PGA').checked) {
+			delete this._input['minPGA'];
+			delete this._input['maxPGA'];
 		}
 		
 		this._input.page = this._input.maxPages = 0;
@@ -56,10 +92,11 @@ var app			 =   window.app || (window.app = {}),
 	// Send request for Station data. Calls Controller.Input.loadSites when
 	//   data is received
 	Controller.Input.getSites = (function () {
+		var reqUrl = (app.Drupal ? Drupal.settings.drupal_path + '/' : '') + 'sites.' + (app.DEBUG ? 'xml' : 'php');
 		new Request({
 			async: false,
 			onSuccess: this.loadSites,
-			url: Drupal.settings.drupal_path + '/sites.php'
+			url: reqUrl
 		}).get();
 	});
 	// Retrieve Station data from sites.xml
@@ -72,12 +109,9 @@ var app			 =   window.app || (window.app = {}),
 					label: node.getAttribute('name'),
 					id: node.getAttribute('id')
 				});
-			//} else if (node.tagName === 'none') {
-            } else {
-                var typ = (node.tagName === 'none') ? 'site-gray' : '';
+			} else {
 				thisEl = new Element('option', {
 					id: node.getAttribute('id'),
-                    class: typ,
 					lat: node.getAttribute('lat'),
 					lon: node.getAttribute('lon'),
 					site: node.getAttribute('name'),
@@ -88,6 +122,8 @@ var app			 =   window.app || (window.app = {}),
 							' (' + node.getAttribute('descrip') + ')',
 					value: node.getAttribute('id')
 				});
+				
+				if (node.tagName === 'none') thisEl.disabled = true;
 			}
 			parent.adopt(thisEl);
 			if (node.hasChildNodes()) {
@@ -147,8 +183,11 @@ var app			 =   window.app || (window.app = {}),
 		}
 	});
 	Controller.TableNav.nav = (function (offset) {
-	PubSub.publish('clearTable', {});
+		PubSub.publish('clearTable', {});
 		this._currPage += parseInt(offset, 10);
+
+		this._currPage = Math.max(0, this._currPage);
+		this._currPage = Math.min(this._currPage, this._maxPage - 1);
 		
 		app.Controller.Input._input.page = this._currPage;
 		app.Models.Events.fetch(app.Controller.Input._input);
@@ -160,6 +199,7 @@ var app			 =   window.app || (window.app = {}),
 	Controller.TableNav.pageEntered = (function (evt) {
 		if (evt.key === 'enter') {
 			this._currPage = $('table-ctrl-page').value - 1;
+            this._currPage = this._currPage.limit(0, this._maxPage - 1);
 			app.Controller.Input._input.page = this._currPage;
 			app.Models.Events.fetch(app.Controller.Input._input);
 		}
